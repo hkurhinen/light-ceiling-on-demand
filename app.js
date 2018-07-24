@@ -1,6 +1,4 @@
 const WebSocket = require('ws');
-const channels = ["red", "green", "blue", "predefined"];
-const webSockets = [];
 const DEVICE_NAME = "leds";
 const WIDTH = 8;
 const HEIGHT = 64;
@@ -46,8 +44,14 @@ fadecandyWebsocket.on('open', () => {
       const index = (x * HEIGHT + y) * 3;
       return data[index + 2] || 0;
     }
+
     getRandomInt(min, max) {
       return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    getMessageValue(message) {
+      const array = new Uint8Array(message);
+      return array[0];
     }
   }
 
@@ -59,9 +63,7 @@ fadecandyWebsocket.on('open', () => {
     async onMessage(message) {
       const twinkleY = this.getRandomInt(0, HEIGHT);
       const twinkleX = this.getRandomInt(0, WIDTH);
-      const array = new Uint8Array(message);
-      const value = array[0];
-      const masterBrightness = value / 255;
+      const masterBrightness = this.getMessageValue(message) / 255;
 
       for (let y = 0; y < HEIGHT; y++) {
         for (let x = 0; x < WIDTH; x++) {
@@ -119,7 +121,6 @@ fadecandyWebsocket.on('open', () => {
       // Implement on message handler
     }
   }
-  const x = new PurpleWaveCeilingConnection();
-  //x.setPixel(1,0,0,0,255);
-  //x.send();
+  
+  new PurpleWaveCeilingConnection();
 });
