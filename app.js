@@ -97,8 +97,8 @@ fadecandyWebsocket.on('open', () => {
           
           this.setPixel(x, y, r * masterBrightness, 10, g * masterBrightness);
         }
-        this.send();
       }
+      this.send();
     }
   }
 
@@ -108,7 +108,43 @@ fadecandyWebsocket.on('open', () => {
     }
     
     async onMessage(message) {
-      // Implement on message handler
+      const twinkleY = this.getRandomInt(0, HEIGHT);
+      const twinkleX = this.getRandomInt(0, WIDTH);
+  
+      for (let y = 0; y < HEIGHT; y++) {
+        for (let x = 0; x < WIDTH; x++) {
+          
+          let rand = 0;
+          
+          if (twinkleY == y && twinkleX == x) {
+            rand = this.getRandomInt(-200, 200);
+          } else {
+            rand = this.getRandomInt(-20, 20);
+          }
+          
+          let r = ledR[x][y];
+          let g = ledG[x][y];
+          r = r + rand;
+          g = g + rand;
+          if (r > 255) {
+            r = 255;
+          }
+          
+          if (r < 170) {
+          r = 170;
+          }
+          
+          if (g > 80) {
+            g = 80;
+          }
+          
+          if (g < 0) {
+          g = 0;
+          }
+          this.setPixelColor(x, y, r, b, 0)
+        }
+      }
+      this.send();
     }
   }
 
@@ -118,9 +154,49 @@ fadecandyWebsocket.on('open', () => {
     }
     
     async onMessage(message) {
-      // Implement on message handler
+      const twinkleY = this.getRandomInt(0, HEIGHT);
+      const twinkleX = this.getRandomInt(0, WIDTH);
+      const masterBrightness = 0.7;
+  
+      for (let y = 0; y < HEIGHT; y++) {
+        for (let x = 0; x < WIDTH; x++) {
+          let rand = 0;
+          
+          if (twinkleY == y && twinkleX == x) {
+            rand = this.getRandomInt(-200, 200);
+          } else {
+            rand = this.getRandomInt(-40, 40);
+          }
+          
+          let r = ledR[x][y];
+          let g = ledG[x][y];
+          r = r + rand;
+          g = g + rand;
+          if (r > 255) {
+            r = 255;
+          }
+          
+          if (r < 100) {
+          r = 100;
+          }
+          
+          if (g > 255) {
+            g = 255;
+          }
+          
+          if (g < 100) {
+          g = 100;
+          }
+          
+          this.setPixel(x, y, r * masterBrightness, g * masterBrightness, 255 * masterBrightness);
+          
+        }
+      }
+      this.send();
     }
   }
   
+  new RedTwinkleCeilingConnection();
+  new BlueTwinkleCeilingConnection();
   new PurpleWaveCeilingConnection();
 });
